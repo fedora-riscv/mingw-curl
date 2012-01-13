@@ -7,7 +7,7 @@
 
 Name:           mingw32-curl
 Version:        7.20.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
@@ -216,6 +216,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.20.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Wed Jul 06 2011 Kalev Lember <kalevlember@gmail.com> - 7.20.1-3
 - Rebuilt against win-iconv
 
