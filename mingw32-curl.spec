@@ -65,6 +65,15 @@ Patch106:       curl-7.20.1-threaded-dns.patch
 # exclude test1112 from the test suite (#565305)
 Patch107:       curl-7.20.0-disable-test1112.patch
 
+# Curl tries to implement the ftruncate64 function while mingw-w64 already
+# provides an implementation for this function
+Patch108:       curl-dont-implement-ftruncate64.patch
+
+# Curl wants to map various errno/WSA error codes to its own interpration
+# Let curl do this without conflicting with the errno/WSA error codes defined
+# in the mingw-w64 headers
+Patch109:       curl-undef-mingw-error-codes.patch
+
 #
 # End of native patches
 #
@@ -143,6 +152,9 @@ done
 %patch107 -p1
 rm -f tests/data/test1112
 
+%patch108 -p0
+%patch109 -p0
+
 autoreconf
 
 # replace hard wired port numbers in the test suite
@@ -218,6 +230,9 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Mon Feb 27 2012 Erik van Pienbroek <epienbro@fedoraproject.org> - 7.20.1-5
 - Rebuild against the mingw-w64 toolchain
+- Let curl use its own errno/WSA error codes
+- The function ftruncate64 doesn't need to be reimplemented by curl
+  as the mingw-w64 crt already contains an implementation for it
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.20.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
