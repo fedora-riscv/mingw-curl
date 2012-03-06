@@ -1,9 +1,9 @@
-%global __strip %{_mingw32_strip}
-%global __objdump %{_mingw32_objdump}
+%global __strip %{mingw32_strip}
+%global __objdump %{mingw32_objdump}
 %global _use_internal_dependency_generator 0
-%global __find_requires %{_mingw32_findrequires}
-%global __find_provides %{_mingw32_findprovides}
-%define __debug_install_post %{_mingw32_debug_install_post}
+%global __find_requires %{mingw32_findrequires}
+%global __find_provides %{mingw32_findprovides}
+%define __debug_install_post %{mingw32_debug_install_post}
 
 Name:           mingw-curl
 Version:        7.20.1
@@ -130,7 +130,7 @@ Group:          Development/Libraries
 Static version of the MinGW Windows Curl library.
 
 
-%{_mingw32_debug_package}
+%{mingw32_debug_package}
 
 
 %prep
@@ -175,9 +175,9 @@ autoreconf
 sed -i s/899\\\([0-9]\\\)/%{?__isa_bits}9\\1/ tests/data/test*
 
 %build
-%{_mingw32_configure} \
+%{mingw32_configure} \
   --with-ssl --enable-ipv6 \
-  --with-ca-bundle=%{_mingw32_sysconfdir}/pki/tls/certs/ca-bundle.crt \
+  --with-ca-bundle=%{mingw32_sysconfdir}/pki/tls/certs/ca-bundle.crt \
   --with-libidn \
   --enable-static --with-libssh2 \
   --without-random
@@ -194,9 +194,9 @@ sed -i s/899\\\([0-9]\\\)/%{?__isa_bits}9\\1/ tests/data/test*
 # These are the original flags that we'll work towards as
 # more of the dependencies get ported to Fedora MinGW.
 #
-#  --without-ssl --with-nss=%{_mingw32_prefix} --enable-ipv6
-#  --with-ca-bundle=%{_mingw32_sysconfdir}/pki/tls/certs/ca-bundle.crt
-#  --with-gssapi=%{_mingw32_prefix}/kerberos --with-libidn
+#  --without-ssl --with-nss=%{mingw32_prefix} --enable-ipv6
+#  --with-ca-bundle=%{mingw32_sysconfdir}/pki/tls/certs/ca-bundle.crt
+#  --with-gssapi=%{mingw32_prefix}/kerberos --with-libidn
 #  --enable-ldaps --disable-static --with-libssh2
 
 # The ./configure scripts lacks a check for Win32 threads
@@ -215,10 +215,10 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 # Remove the man pages which duplicate documentation in the
 # native Fedora package.
-rm -r $RPM_BUILD_ROOT%{_mingw32_mandir}/man{1,3}
+rm -r $RPM_BUILD_ROOT%{mingw32_mandir}/man{1,3}
 
 # Drop the curl.exe tool as end-user binaries aren't allowed in Fedora MinGW
-rm -f $RPM_BUILD_ROOT%{_mingw32_bindir}/curl.exe
+rm -f $RPM_BUILD_ROOT%{mingw32_bindir}/curl.exe
 
 
 %clean
@@ -228,22 +228,23 @@ rm -rf $RPM_BUILD_ROOT
 %files -n mingw32-curl
 %defattr(-,root,root,-)
 %doc COPYING
-%{_mingw32_bindir}/curl-config
-%{_mingw32_bindir}/libcurl-4.dll
-%{_mingw32_libdir}/libcurl.dll.a
-%{_mingw32_libdir}/libcurl.la
-%{_mingw32_libdir}/pkgconfig/libcurl.pc
-%{_mingw32_includedir}/curl/
+%{mingw32_bindir}/curl-config
+%{mingw32_bindir}/libcurl-4.dll
+%{mingw32_libdir}/libcurl.dll.a
+%{mingw32_libdir}/libcurl.la
+%{mingw32_libdir}/pkgconfig/libcurl.pc
+%{mingw32_includedir}/curl/
 
 
 %files -n mingw32-curl-static
 %defattr(-,root,root,-)
-%{_mingw32_libdir}/libcurl.a
+%{mingw32_libdir}/libcurl.a
 
 
 %changelog
 * Tue Mar 06 2012 Erik van Pienbroek <epienbro@fedoraproject.org> - 7.20.1-6
 - Renamed the source package to mingw-curl (RHBZ #800375)
+- Use mingw macros without leading underscore
 
 * Mon Feb 27 2012 Erik van Pienbroek <epienbro@fedoraproject.org> - 7.20.1-5
 - Rebuild against the mingw-w64 toolchain
