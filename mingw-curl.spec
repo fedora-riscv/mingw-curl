@@ -1,8 +1,5 @@
 %global __strip %{mingw32_strip}
 %global __objdump %{mingw32_objdump}
-%global _use_internal_dependency_generator 0
-%global __find_requires %{mingw32_findrequires}
-%global __find_provides %{mingw32_findprovides}
 %define __debug_install_post %{mingw32_debug_install_post}
 
 Name:           mingw-curl
@@ -14,7 +11,6 @@ License:        MIT
 Group:          Development/Libraries
 URL:            http://curl.haxx.se/
 Source0:        http://curl.haxx.se/download/curl-%{version}.tar.lzma
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 
@@ -210,7 +206,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
 
 # Remove the man pages which duplicate documentation in the
@@ -219,10 +214,6 @@ rm -r $RPM_BUILD_ROOT%{mingw32_mandir}/man{1,3}
 
 # Drop the curl.exe tool as end-user binaries aren't allowed in Fedora MinGW
 rm -f $RPM_BUILD_ROOT%{mingw32_bindir}/curl.exe
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 
 %files -n mingw32-curl
@@ -245,6 +236,7 @@ rm -rf $RPM_BUILD_ROOT
 * Tue Mar 06 2012 Erik van Pienbroek <epienbro@fedoraproject.org> - 7.20.1-6
 - Renamed the source package to mingw-curl (RHBZ #800375)
 - Use mingw macros without leading underscore
+- Dropped unneeded RPM tags
 
 * Mon Feb 27 2012 Erik van Pienbroek <epienbro@fedoraproject.org> - 7.20.1-5
 - Rebuild against the mingw-w64 toolchain
