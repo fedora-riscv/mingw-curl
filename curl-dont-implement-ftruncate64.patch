@@ -1,0 +1,19 @@
+--- src/main.c.orig	2012-02-28 00:45:09.060495137 +0100
++++ src/main.c	2012-02-28 00:46:20.440778598 +0100
+@@ -432,6 +432,7 @@
+  * Truncate a file handle at a 64-bit position 'where'.
+  */
+ 
++#if 0
+ static int ftruncate64 (int fd, curl_off_t where)
+ {
+   if(_lseeki64(fd, where, SEEK_SET) < 0)
+@@ -442,6 +443,8 @@
+ 
+   return 0;
+ }
++#endif
++
+ #define ftruncate(fd,where) ftruncate64(fd,where)
+ 
+ #endif /* WIN32 */
