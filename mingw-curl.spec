@@ -5,9 +5,9 @@
 %global __find_provides %{_mingw32_findprovides}
 %define __debug_install_post %{_mingw32_debug_install_post}
 
-Name:           mingw32-curl
+Name:           mingw-curl
 Version:        7.20.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
@@ -107,12 +107,26 @@ resume.
 This is the MinGW cross-compiled Windows library.
 
 
-%package static
+%package -n mingw32-curl
+Summary:        MinGW Windows port of curl and libcurl
+
+%description -n mingw32-curl
+cURL is a tool for getting files from HTTP, FTP, FILE, LDAP, LDAPS,
+DICT, TELNET and TFTP servers, using any of the supported protocols.
+cURL is designed to work without user interaction or any kind of
+interactivity. cURL offers many useful capabilities, like proxy
+support, user authentication, FTP upload, HTTP post, and file transfer
+resume.
+
+This is the MinGW cross-compiled Windows library.
+
+
+%package -n mingw32-curl-static
 Summary:        Static version of the MinGW Windows Curl library
-Requires:       %{name} = %{version}-%{release}
+Requires:       mingw32-curl = %{version}-%{release}
 Group:          Development/Libraries
 
-%description static
+%description -n mingw32-curl-static
 Static version of the MinGW Windows Curl library.
 
 
@@ -211,7 +225,7 @@ rm -f $RPM_BUILD_ROOT%{_mingw32_bindir}/curl.exe
 rm -rf $RPM_BUILD_ROOT
 
 
-%files
+%files -n mingw32-curl
 %defattr(-,root,root,-)
 %doc COPYING
 %{_mingw32_bindir}/curl-config
@@ -222,12 +236,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_mingw32_includedir}/curl/
 
 
-%files static
+%files -n mingw32-curl-static
 %defattr(-,root,root,-)
 %{_mingw32_libdir}/libcurl.a
 
 
 %changelog
+* Tue Mar 06 2012 Erik van Pienbroek <epienbro@fedoraproject.org> - 7.20.1-6
+- Renamed the source package to mingw-curl (RHBZ #800375)
+
 * Mon Feb 27 2012 Erik van Pienbroek <epienbro@fedoraproject.org> - 7.20.1-5
 - Rebuild against the mingw-w64 toolchain
 - Let curl use its own errno/WSA error codes
