@@ -4,7 +4,7 @@
 
 Name:           mingw-curl
 Version:        7.20.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
@@ -208,6 +208,9 @@ make %{?_smp_mflags}
 %install
 make DESTDIR=$RPM_BUILD_ROOT install
 
+# Remove .la files
+rm -f $RPM_BUILD_ROOT%{mingw32_libdir}/*.la
+
 # Remove the man pages which duplicate documentation in the
 # native Fedora package.
 rm -r $RPM_BUILD_ROOT%{mingw32_mandir}/man{1,3}
@@ -222,7 +225,6 @@ rm -f $RPM_BUILD_ROOT%{mingw32_bindir}/curl.exe
 %{mingw32_bindir}/curl-config
 %{mingw32_bindir}/libcurl-4.dll
 %{mingw32_libdir}/libcurl.dll.a
-%{mingw32_libdir}/libcurl.la
 %{mingw32_libdir}/pkgconfig/libcurl.pc
 %{mingw32_includedir}/curl/
 
@@ -233,6 +235,9 @@ rm -f $RPM_BUILD_ROOT%{mingw32_bindir}/curl.exe
 
 
 %changelog
+* Fri Mar 09 2012 Kalev Lember <kalevlember@gmail.com> - 7.20.1-7
+- Remove .la files
+
 * Tue Mar 06 2012 Erik van Pienbroek <epienbro@fedoraproject.org> - 7.20.1-6
 - Renamed the source package to mingw-curl (RHBZ #800375)
 - Use mingw macros without leading underscore
