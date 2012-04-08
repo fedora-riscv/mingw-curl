@@ -1,6 +1,4 @@
-%global __strip %{mingw32_strip}
-%global __objdump %{mingw32_objdump}
-%define __debug_install_post %{mingw32_debug_install_post}
+%?mingw_package_header
 
 Name:           mingw-curl
 Version:        7.25.0
@@ -44,8 +42,7 @@ Patch108:       0108-curl-7.25.0-utf8.patch
 # End of native patches
 #
 
-BuildRequires:  automake
-BuildRequires:  mingw32-filesystem >= 52
+BuildRequires:  mingw32-filesystem >= 95
 BuildRequires:  mingw32-gcc
 BuildRequires:  mingw32-binutils
 BuildRequires:  mingw32-gettext
@@ -53,13 +50,17 @@ BuildRequires:  mingw32-win-iconv
 BuildRequires:  mingw32-zlib
 BuildRequires:  mingw32-libidn
 BuildRequires:  mingw32-libssh2
-
-# See nss/README for the status of this package.
-#BuildRequires:  mingw32-nss
-# Temporarily we can use OpenSSL instead of NSS:
 BuildRequires:  mingw32-openssl
 
-Requires:       pkgconfig
+BuildRequires:  mingw64-filesystem >= 95
+BuildRequires:  mingw64-gcc
+BuildRequires:  mingw64-binutils
+BuildRequires:  mingw64-gettext
+BuildRequires:  mingw64-win-iconv
+BuildRequires:  mingw64-zlib
+BuildRequires:  mingw64-libidn
+BuildRequires:  mingw64-libssh2
+BuildRequires:  mingw64-openssl
 
 
 %description
@@ -73,8 +74,10 @@ resume.
 This is the MinGW cross-compiled Windows library.
 
 
+# Win32
 %package -n mingw32-curl
 Summary:        MinGW Windows port of curl and libcurl
+Requires:       pkgconfig
 
 %description -n mingw32-curl
 cURL is a tool for getting files from HTTP, FTP, FILE, LDAP, LDAPS,
@@ -86,17 +89,37 @@ resume.
 
 This is the MinGW cross-compiled Windows library.
 
-
 %package -n mingw32-curl-static
 Summary:        Static version of the MinGW Windows Curl library
 Requires:       mingw32-curl = %{version}-%{release}
-Group:          Development/Libraries
 
 %description -n mingw32-curl-static
 Static version of the MinGW Windows Curl library.
 
+# Win64
+%package -n mingw64-curl
+Summary:        MinGW Windows port of curl and libcurl
+Requires:       pkgconfig
 
-%{mingw32_debug_package}
+%description -n mingw64-curl
+cURL is a tool for getting files from HTTP, FTP, FILE, LDAP, LDAPS,
+DICT, TELNET and TFTP servers, using any of the supported protocols.
+cURL is designed to work without user interaction or any kind of
+interactivity. cURL offers many useful capabilities, like proxy
+support, user authentication, FTP upload, HTTP post, and file transfer
+resume.
+
+This is the MinGW cross-compiled Windows library.
+
+%package -n mingw64-curl-static
+Summary:        Static version of the MinGW Windows Curl library
+Requires:       mingw64-curl = %{version}-%{release}
+
+%description -n mingw64-curl-static
+Static version of the MinGW Windows Curl library.
+
+
+%?mingw_debug_package
 
 
 %prep
@@ -117,9 +140,10 @@ rm -f tests/data/test1112
 sed -i s/899\\\([0-9]\\\)/%{?__isa_bits}9\\1/ tests/data/test*
 
 %build
-%{mingw32_configure} \
+MINGW32_CONFIGURE_ARGS="--with-ca-bundle=%{mingw32_sysconfdir}/pki/tls/certs/ca-bundle.crt"
+MINGW64_CONFIGURE_ARGS="--with-ca-bundle=%{mingw64_sysconfdir}/pki/tls/certs/ca-bundle.crt"
+%mingw_configure \
   --with-ssl --enable-ipv6 \
-  --with-ca-bundle=%{mingw32_sysconfdir}/pki/tls/certs/ca-bundle.crt \
   --with-libidn \
   --enable-static --with-libssh2 \
   --without-random
@@ -141,30 +165,26 @@ sed -i s/899\\\([0-9]\\\)/%{?__isa_bits}9\\1/ tests/data/test*
 #  --with-gssapi=%{mingw32_prefix}/kerberos --with-libidn
 #  --enable-ldaps --disable-static --with-libssh2
 
-# The ./configure scripts lacks a check for Win32 threads
-# As this breaks compilation of async DNS resolving we add a small hack here
-#echo "#define USE_THREADS_WIN32 1" >> lib/curl_config.h
-
-# Prevent a possible conflict when mingw32-pthreads is installed
-#sed -i s/'#define USE_THREADS_POSIX 1'// lib/curl_config.h
-
-make %{?_smp_mflags}
+%mingw_make %{?_smp_mflags}
 
 
 %install
-make DESTDIR=$RPM_BUILD_ROOT install
+%mingw_make DESTDIR=$RPM_BUILD_ROOT install
 
 # Remove .la files
-rm -f $RPM_BUILD_ROOT%{mingw32_libdir}/*.la
+find $RPM_BUILD_ROOT -name "*.la" -delete
 
 # Remove the man pages which duplicate documentation in the
 # native Fedora package.
 rm -r $RPM_BUILD_ROOT%{mingw32_mandir}/man{1,3}
+rm -r $RPM_BUILD_ROOT%{mingw64_mandir}/man{1,3}
 
 # Drop the curl.exe tool as end-user binaries aren't allowed in Fedora MinGW
 rm -f $RPM_BUILD_ROOT%{mingw32_bindir}/curl.exe
+rm -f $RPM_BUILD_ROOT%{mingw64_bindir}/curl.exe
 
 
+# Win32
 %files -n mingw32-curl
 %doc COPYING
 %{mingw32_bindir}/curl-config
@@ -173,14 +193,26 @@ rm -f $RPM_BUILD_ROOT%{mingw32_bindir}/curl.exe
 %{mingw32_libdir}/pkgconfig/libcurl.pc
 %{mingw32_includedir}/curl/
 
-
 %files -n mingw32-curl-static
 %{mingw32_libdir}/libcurl.a
+
+# Win64
+%files -n mingw64-curl
+%doc COPYING
+%{mingw64_bindir}/curl-config
+%{mingw64_bindir}/libcurl-4.dll
+%{mingw64_libdir}/libcurl.dll.a
+%{mingw64_libdir}/pkgconfig/libcurl.pc
+%{mingw64_includedir}/curl/
+
+%files -n mingw64-curl-static
+%{mingw64_libdir}/libcurl.a
 
 
 %changelog
 * Sun Apr 08 2012 Erik van Pienbroek <epienbro@fedoraproject.org> - 7.25.0-1
 - Update to 7.25.0
+- Added win64 support (contributed by Marc-Andre Lureau)
 - Dropped upstreamed patches
 - Dropped unneeded RPM tags
 
