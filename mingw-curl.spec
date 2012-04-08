@@ -3,8 +3,8 @@
 %define __debug_install_post %{mingw32_debug_install_post}
 
 Name:           mingw-curl
-Version:        7.20.1
-Release:        7%{?dist}
+Version:        7.25.0
+Release:        1%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
@@ -18,57 +18,27 @@ BuildArch:      noarch
 # Patches from native Fedora package.
 #
 
-# upstream commit e32fe30d0cf7c1f7045ac0bd29322e7fb4feb5c8
-Patch0:         curl-7.20.0-e32fe30.patch
-
-# upstream commit d487ade72c5f31703ce097e8460e0225fad80348
-Patch1:         curl-7.20.1-d487ade.patch
-
-# upstream commit 82e9b78a388ab539c8784cd853adf6e4a97d52c5
-Patch2:         curl-7.20.1-82e9b78.patch
-
-# rhbz #581926
-#   upstream commit 2e8b21833a581cc5389833ec4fdeeaa6fb7be538
-#   upstream commit 3e759f4fb6018b353bd4a1d608be3a3d7b2c9645
-#   upstream commit 016ce4b1daa0f8d44a0da7105e1e1c97531e8b87
-Patch3:         curl-7.20.1-crl.patch
-
-# rhbz #581926 - test-case
-#   http://curl.haxx.se/mail/lib-2010-04/0214.html
-#   (the CA pass phrase used in the patch is 'libcurl')
-Patch4:         curl-7.20.1-crl-test.patch
-
 # patch making libcurl multilib ready
-Patch101:       curl-7.20.0-multilib.patch
-
-# force -lrt when linking the curl tool and test-cases
-#Patch102:       curl-7.20.0-lrt.patch
+Patch101:       0101-curl-7.25.0-multilib.patch
 
 # prevent configure script from discarding -g in CFLAGS (#496778)
-Patch103:       curl-7.19.4-debug.patch
-
-# suppress occasional failure of curl test-suite on s390; caused more likely
-# by the test-suite infrastructure than (lib)curl itself
-# http://curl.haxx.se/mail/lib-2009-12/0031.html
-Patch104:       curl-7.20.1-test-delay.patch
+Patch102:       0102-curl-7.25.0-debug.patch
 
 # use localhost6 instead of ip6-localhost in the curl test-suite
-Patch105:       curl-7.19.7-localhost6.patch
-
-# experimentally enabled threaded DNS lookup
-Patch106:       curl-7.20.1-threaded-dns.patch
+Patch104:       0104-curl-7.19.7-localhost6.patch
 
 # exclude test1112 from the test suite (#565305)
-Patch107:       curl-7.20.0-disable-test1112.patch
+Patch105:       0105-curl-7.21.3-disable-test1112.patch
 
-# Curl tries to implement the ftruncate64 function while mingw-w64 already
-# provides an implementation for this function
-Patch108:       curl-dont-implement-ftruncate64.patch
+# disable valgrind for certain test-cases (libssh2 problem)
+Patch106:       0106-curl-7.21.0-libssh2-valgrind.patch
 
-# Curl wants to map various errno/WSA error codes to its own interpration
-# Let curl do this without conflicting with the errno/WSA error codes defined
-# in the mingw-w64 headers
-Patch109:       curl-undef-mingw-error-codes.patch
+# work around valgrind bug (#678518)
+Patch107:       0107-curl-7.21.4-libidn-valgrind.patch
+
+# Fix character encoding of docs, which are of mixed encoding originally so
+# a simple iconv can't fix them
+Patch108:       0108-curl-7.25.0-utf8.patch
 
 #
 # End of native patches
@@ -132,40 +102,16 @@ Static version of the MinGW Windows Curl library.
 %prep
 %setup -q -n curl-%{version}
 
-# Convert docs to UTF-8
-# NOTE: we do this _before_ applying of all patches, which are already UTF-8
-for f in CHANGES README; do
-    iconv -f iso-8859-1 -t utf8 < ${f} > ${f}.utf8
-    mv -f ${f}.utf8 ${f}
-done
-
-# revert an upstream commit which breaks Fedora builds
-%patch0 -p1 -R
-
-# upstream patches (already applied)
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-
-# upstream patches (not yet applied)
-%patch4 -p1
-
-# Fedora patches
 %patch101 -p1
 #%patch102 -p1
-%patch103 -p1
 %patch104 -p1
-%patch105 -p1
 %patch106 -p1
+%patch107 -p1
+%patch108 -p1
 
 # exclude test1112 from the test suite (#565305)
-%patch107 -p1
+%patch105 -p1
 rm -f tests/data/test1112
-
-%patch108 -p0
-%patch109 -p0
-
-autoreconf
 
 # replace hard wired port numbers in the test suite
 sed -i s/899\\\([0-9]\\\)/%{?__isa_bits}9\\1/ tests/data/test*
@@ -197,10 +143,10 @@ sed -i s/899\\\([0-9]\\\)/%{?__isa_bits}9\\1/ tests/data/test*
 
 # The ./configure scripts lacks a check for Win32 threads
 # As this breaks compilation of async DNS resolving we add a small hack here
-echo "#define USE_THREADS_WIN32 1" >> lib/curl_config.h
+#echo "#define USE_THREADS_WIN32 1" >> lib/curl_config.h
 
 # Prevent a possible conflict when mingw32-pthreads is installed
-sed -i s/'#define USE_THREADS_POSIX 1'// lib/curl_config.h
+#sed -i s/'#define USE_THREADS_POSIX 1'// lib/curl_config.h
 
 make %{?_smp_mflags}
 
@@ -220,7 +166,6 @@ rm -f $RPM_BUILD_ROOT%{mingw32_bindir}/curl.exe
 
 
 %files -n mingw32-curl
-%defattr(-,root,root,-)
 %doc COPYING
 %{mingw32_bindir}/curl-config
 %{mingw32_bindir}/libcurl-4.dll
@@ -230,11 +175,15 @@ rm -f $RPM_BUILD_ROOT%{mingw32_bindir}/curl.exe
 
 
 %files -n mingw32-curl-static
-%defattr(-,root,root,-)
 %{mingw32_libdir}/libcurl.a
 
 
 %changelog
+* Sun Apr 08 2012 Erik van Pienbroek <epienbro@fedoraproject.org> - 7.25.0-1
+- Update to 7.25.0
+- Dropped upstreamed patches
+- Dropped unneeded RPM tags
+
 * Fri Mar 09 2012 Kalev Lember <kalevlember@gmail.com> - 7.20.1-7
 - Remove .la files
 
