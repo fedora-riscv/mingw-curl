@@ -1,8 +1,8 @@
 %?mingw_package_header
 
 Name:           mingw-curl
-Version:        7.25.0
-Release:        2%{?dist}
+Version:        7.28.1
+Release:        1%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
@@ -11,36 +11,6 @@ URL:            http://curl.haxx.se/
 Source0:        http://curl.haxx.se/download/curl-%{version}.tar.lzma
 
 BuildArch:      noarch
-
-#
-# Patches from native Fedora package.
-#
-
-# patch making libcurl multilib ready
-Patch101:       0101-curl-7.25.0-multilib.patch
-
-# prevent configure script from discarding -g in CFLAGS (#496778)
-Patch102:       0102-curl-7.25.0-debug.patch
-
-# use localhost6 instead of ip6-localhost in the curl test-suite
-Patch104:       0104-curl-7.19.7-localhost6.patch
-
-# exclude test1112 from the test suite (#565305)
-Patch105:       0105-curl-7.21.3-disable-test1112.patch
-
-# disable valgrind for certain test-cases (libssh2 problem)
-Patch106:       0106-curl-7.21.0-libssh2-valgrind.patch
-
-# work around valgrind bug (#678518)
-Patch107:       0107-curl-7.21.4-libidn-valgrind.patch
-
-# Fix character encoding of docs, which are of mixed encoding originally so
-# a simple iconv can't fix them
-Patch108:       0108-curl-7.25.0-utf8.patch
-
-#
-# End of native patches
-#
 
 BuildRequires:  mingw32-filesystem >= 95
 BuildRequires:  mingw32-gcc
@@ -125,19 +95,6 @@ Static version of the MinGW Windows Curl library.
 %prep
 %setup -q -n curl-%{version}
 
-%patch101 -p1
-#%patch102 -p1
-%patch104 -p1
-%patch106 -p1
-%patch107 -p1
-%patch108 -p1
-
-# exclude test1112 from the test suite (#565305)
-%patch105 -p1
-rm -f tests/data/test1112
-
-# replace hard wired port numbers in the test suite
-sed -i s/899\\\([0-9]\\\)/%{?__isa_bits}9\\1/ tests/data/test*
 
 %build
 MINGW32_CONFIGURE_ARGS="--with-ca-bundle=%{mingw32_sysconfdir}/pki/tls/certs/ca-bundle.crt"
@@ -210,6 +167,10 @@ rm -f $RPM_BUILD_ROOT%{mingw64_bindir}/curl.exe
 
 
 %changelog
+* Wed Nov 21 2012 Erik van Pienbroek <epienbro@fedoraproject.org> - 7.28.1-1
+- Update to 7.28.1
+- Removed all patches as they're not needed for the mingw target
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.25.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
