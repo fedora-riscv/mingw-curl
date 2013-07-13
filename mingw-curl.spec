@@ -99,11 +99,10 @@ Static version of the MinGW Windows Curl library.
 %build
 MINGW32_CONFIGURE_ARGS="--with-ca-bundle=%{mingw32_sysconfdir}/pki/tls/certs/ca-bundle.crt"
 MINGW64_CONFIGURE_ARGS="--with-ca-bundle=%{mingw64_sysconfdir}/pki/tls/certs/ca-bundle.crt"
-%mingw_configure \
-  --with-ssl --enable-ipv6 \
-  --with-libidn \
-  --enable-static --with-libssh2 \
-  --without-random
+MINGW_CONFIGURE_ARGS="--with-ssl --enable-ipv6 --with-libidn --with-libssh2 --without-random"
+
+MINGW_BUILDDIR_SUFFIX=_static %mingw_configure --enable-static --disable-shared
+MINGW_BUILDDIR_SUFFIX=_shared %mingw_configure --disable-static --enable-shared
 
 # It's not clear where to set the --with-ca-bundle path.  This is the
 # default for CURLOPT_CAINFO.  If this doesn't exist, you'll get an
@@ -122,11 +121,18 @@ MINGW64_CONFIGURE_ARGS="--with-ca-bundle=%{mingw64_sysconfdir}/pki/tls/certs/ca-
 #  --with-gssapi=%{mingw32_prefix}/kerberos --with-libidn
 #  --enable-ldaps --disable-static --with-libssh2
 
-%mingw_make %{?_smp_mflags}
+MINGW_BUILDDIR_SUFFIX=_static %mingw_make %{?_smp_mflags}
+MINGW_BUILDDIR_SUFFIX=_shared %mingw_make %{?_smp_mflags}
 
 
 %install
-%mingw_make DESTDIR=$RPM_BUILD_ROOT install
+MINGW_BUILDDIR_SUFFIX=_static %mingw_make DESTDIR=$RPM_BUILD_ROOT/static install
+MINGW_BUILDDIR_SUFFIX=_shared %mingw_make DESTDIR=$RPM_BUILD_ROOT install
+
+# The static library from the static build is the only one of interest to us
+mv $RPM_BUILD_ROOT/static%{mingw32_libdir}/libcurl.a $RPM_BUILD_ROOT%{mingw32_libdir}/libcurl.a
+mv $RPM_BUILD_ROOT/static%{mingw64_libdir}/libcurl.a $RPM_BUILD_ROOT%{mingw64_libdir}/libcurl.a
+rm -rf $RPM_BUILD_ROOT/static
 
 # Remove .la files
 find $RPM_BUILD_ROOT -name "*.la" -delete
