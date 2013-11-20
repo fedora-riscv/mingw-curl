@@ -1,7 +1,7 @@
 %?mingw_package_header
 
 Name:           mingw-curl
-Version:        7.32.0
+Version:        7.33.0
 Release:        1%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
@@ -173,6 +173,10 @@ rm -f $RPM_BUILD_ROOT%{mingw64_bindir}/curl.exe
 
 
 %changelog
+* Wed Nov 20 2013 Erik van Pienbroek <epienbro@fedoraproject.org> - 7.33.0-1
+- Update to 7.33.0
+- Fixes CVE-2013-4545, RHBZ #1031429
+
 * Sat Sep  7 2013 Erik van Pienbroek <epienbro@fedoraproject.org> - 7.32.0-1
 - Update to 7.32.0
 
