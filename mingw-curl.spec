@@ -1,7 +1,7 @@
 %?mingw_package_header
 
 Name:           mingw-curl
-Version:        7.33.0
+Version:        7.37.0
 Release:        1%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
@@ -142,6 +142,10 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
 rm -r $RPM_BUILD_ROOT%{mingw32_mandir}/man{1,3}
 rm -r $RPM_BUILD_ROOT%{mingw64_mandir}/man{1,3}
 
+# Remove redundant autoconf files
+rm -rf $RPM_BUILD_ROOT%{mingw32_datadir}/aclocal
+rm -rf $RPM_BUILD_ROOT%{mingw64_datadir}/aclocal
+
 # Drop the curl.exe tool as end-user binaries aren't allowed in Fedora MinGW
 rm -f $RPM_BUILD_ROOT%{mingw32_bindir}/curl.exe
 rm -f $RPM_BUILD_ROOT%{mingw64_bindir}/curl.exe
@@ -173,6 +177,10 @@ rm -f $RPM_BUILD_ROOT%{mingw64_bindir}/curl.exe
 
 
 %changelog
+* Thu May 29 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 7.37.0-1
+- Update to 7.37.0
+- Fixes CVE-2014-0138 and CVE-2014-0139 (RHBZ #1080880)
+
 * Wed Nov 20 2013 Erik van Pienbroek <epienbro@fedoraproject.org> - 7.33.0-1
 - Update to 7.33.0
 - Fixes CVE-2013-4545, RHBZ #1031429
