@@ -1,8 +1,8 @@
 %?mingw_package_header
 
 Name:           mingw-curl
-Version:        7.37.0
-Release:        2%{?dist}
+Version:        7.39.0
+Release:        1%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
@@ -177,6 +177,11 @@ rm -f $RPM_BUILD_ROOT%{mingw64_bindir}/curl.exe
 
 
 %changelog
+* Tue Dec 23 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 7.39.0-1
+- Update to 7.39.0
+- Fixes CVE-2014-3707 (RHBZ #1160724)
+- Fixes CVE-2014-3620 CVE-2014-3613 (RHBZ #1140037)
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.37.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
