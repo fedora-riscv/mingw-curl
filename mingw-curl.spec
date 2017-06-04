@@ -1,7 +1,7 @@
 %?mingw_package_header
 
 Name:           mingw-curl
-Version:        7.53.1
+Version:        7.54.0
 Release:        1%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
@@ -177,6 +177,9 @@ rm -f $RPM_BUILD_ROOT%{mingw64_bindir}/curl.exe
 
 
 %changelog
+* Sun Jun 04 2017 Michael Cronenworth <mike@cchtml.com> - 7.54.0-1
+- Update to 7.53.0
+
 * Fri Mar 03 2017 Michael Cronenworth <mike@cchtml.com> - 7.53.1-1
 - Update to 7.53.1
 
