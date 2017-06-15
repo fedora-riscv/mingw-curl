@@ -178,10 +178,10 @@ rm -f $RPM_BUILD_ROOT%{mingw64_bindir}/curl.exe
 
 %changelog
 * Wed Jun 14 2017 Michael Cronenworth <mike@cchtml.com> - 7.54.1-1
-- Update to 7.53.1
+- Update to 7.54.1
 
 * Sun Jun 04 2017 Michael Cronenworth <mike@cchtml.com> - 7.54.0-1
-- Update to 7.53.0
+- Update to 7.54.0
 
 * Fri Mar 03 2017 Michael Cronenworth <mike@cchtml.com> - 7.53.1-1
 - Update to 7.53.1
