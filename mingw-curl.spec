@@ -1,14 +1,14 @@
 %?mingw_package_header
 
 Name:           mingw-curl
-Version:        7.54.1
-Release:        2%{?dist}
+Version:        7.56.1
+Release:        1%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
 Group:          Development/Libraries
-URL:            http://curl.haxx.se/
-Source0:        http://curl.haxx.se/download/curl-%{version}.tar.lzma
+URL:            https://curl.haxx.se/
+Source0:        https://curl.haxx.se/download/curl-%{version}.tar.xz
 
 BuildArch:      noarch
 
@@ -177,6 +177,11 @@ rm -f $RPM_BUILD_ROOT%{mingw64_bindir}/curl.exe
 
 
 %changelog
+* Mon Oct 23 2017 Michael Cronenworth <mike@cchtml.com> - 7.56.1-1
+- Update to 7.56.1
+- Fixes CVE-2017-1000257 CVE-2017-1000254 CVE-2017-1000099 CVE-2017-1000100
+  CVE-2017-1000101
+
 * Wed Jul 26 2017 Fedora Release Engineering <releng@fedoraproject.org> - 7.54.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 
