@@ -1,7 +1,7 @@
 %?mingw_package_header
 
 Name:           mingw-curl
-Version:        7.56.1
+Version:        7.57.0
 Release:        1%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
@@ -177,6 +177,13 @@ rm -f $RPM_BUILD_ROOT%{mingw64_bindir}/curl.exe
 
 
 %changelog
+* Thu Dec 21 2017 Michael Cronenworth <mike@cchtml.com> - 7.57.0-1
+- Update to 7.57.0
+- Fixes:
+    CVE-2017-8816 - curl: NTLM buffer overflow via integer overflow
+    CVE-2017-8817 - curl: FTP wildcard out of bounds read
+    CVE-2017-8818 - curl: SSL out of buffer access
+
 * Mon Oct 23 2017 Michael Cronenworth <mike@cchtml.com> - 7.56.1-1
 - Update to 7.56.1
 - Fixes CVE-2017-1000257 CVE-2017-1000254 CVE-2017-1000099 CVE-2017-1000100
