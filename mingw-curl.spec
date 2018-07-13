@@ -2,7 +2,7 @@
 
 Name:           mingw-curl
 Version:        7.57.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
@@ -177,6 +177,9 @@ rm -f $RPM_BUILD_ROOT%{mingw64_bindir}/curl.exe
 
 
 %changelog
+* Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 7.57.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
 * Thu Feb 08 2018 Fedora Release Engineering <releng@fedoraproject.org> - 7.57.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
