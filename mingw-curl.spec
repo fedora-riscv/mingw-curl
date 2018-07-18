@@ -1,14 +1,17 @@
 %?mingw_package_header
 
 Name:           mingw-curl
-Version:        7.57.0
-Release:        3%{?dist}
+Version:        7.61.0
+Release:        1%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
 Group:          Development/Libraries
 URL:            https://curl.haxx.se/
 Source0:        https://curl.haxx.se/download/curl-%{version}.tar.xz
+
+# prevent configure script from discarding -g in CFLAGS (#496778)
+Patch0:         0102-curl-7.36.0-debug.patch
 
 BuildArch:      noarch
 
@@ -18,7 +21,7 @@ BuildRequires:  mingw32-binutils
 BuildRequires:  mingw32-gettext
 BuildRequires:  mingw32-win-iconv
 BuildRequires:  mingw32-zlib
-BuildRequires:  mingw32-libidn
+BuildRequires:  mingw32-libidn2
 BuildRequires:  mingw32-libssh2
 BuildRequires:  mingw32-openssl
 
@@ -28,7 +31,7 @@ BuildRequires:  mingw64-binutils
 BuildRequires:  mingw64-gettext
 BuildRequires:  mingw64-win-iconv
 BuildRequires:  mingw64-zlib
-BuildRequires:  mingw64-libidn
+BuildRequires:  mingw64-libidn2
 BuildRequires:  mingw64-libssh2
 BuildRequires:  mingw64-openssl
 
@@ -94,12 +97,13 @@ Static version of the MinGW Windows Curl library.
 
 %prep
 %setup -q -n curl-%{version}
+%patch0 -p1
 
 
 %build
 MINGW32_CONFIGURE_ARGS="--with-ca-bundle=%{mingw32_sysconfdir}/pki/tls/certs/ca-bundle.crt"
 MINGW64_CONFIGURE_ARGS="--with-ca-bundle=%{mingw64_sysconfdir}/pki/tls/certs/ca-bundle.crt"
-MINGW_CONFIGURE_ARGS="--with-ssl --enable-ipv6 --with-libidn --with-libssh2 --without-random"
+MINGW_CONFIGURE_ARGS="--with-ssl --enable-ipv6 --enable-threaded-resolver --enable-sspi --with-libidn2 --with-libssh2 --without-random"
 
 MINGW_BUILDDIR_SUFFIX=_static %mingw_configure --enable-static --disable-shared
 MINGW_BUILDDIR_SUFFIX=_shared %mingw_configure --disable-static --enable-shared
@@ -146,14 +150,11 @@ rm -r $RPM_BUILD_ROOT%{mingw64_mandir}/man{1,3}
 rm -rf $RPM_BUILD_ROOT%{mingw32_datadir}/aclocal
 rm -rf $RPM_BUILD_ROOT%{mingw64_datadir}/aclocal
 
-# Drop the curl.exe tool as end-user binaries aren't allowed in Fedora MinGW
-rm -f $RPM_BUILD_ROOT%{mingw32_bindir}/curl.exe
-rm -f $RPM_BUILD_ROOT%{mingw64_bindir}/curl.exe
-
 
 # Win32
 %files -n mingw32-curl
 %doc COPYING
+%{mingw32_bindir}/curl.exe
 %{mingw32_bindir}/curl-config
 %{mingw32_bindir}/libcurl-4.dll
 %{mingw32_libdir}/libcurl.dll.a
@@ -166,6 +167,7 @@ rm -f $RPM_BUILD_ROOT%{mingw64_bindir}/curl.exe
 # Win64
 %files -n mingw64-curl
 %doc COPYING
+%{mingw64_bindir}/curl.exe
 %{mingw64_bindir}/curl-config
 %{mingw64_bindir}/libcurl-4.dll
 %{mingw64_libdir}/libcurl.dll.a
@@ -177,6 +179,10 @@ rm -f $RPM_BUILD_ROOT%{mingw64_bindir}/curl.exe
 
 
 %changelog
+* Wed Jul 18 2018 Michael Cronenworth <mike@cchtml.com> - 7.61.0-1
+- Update to 7.61.0
+- Fix IDN support and debug symbols, enable SSPI support, ship user binary
+
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 7.57.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
