@@ -2,7 +2,7 @@
 
 Name:           mingw-curl
 Version:        7.61.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
@@ -179,6 +179,9 @@ rm -rf $RPM_BUILD_ROOT%{mingw64_datadir}/aclocal
 
 
 %changelog
+* Fri Aug 24 2018 Richard W.M. Jones <rjones@redhat.com> - 7.61.0-2
+- Rebuild for new mingw-openssl.
+
 * Wed Jul 18 2018 Michael Cronenworth <mike@cchtml.com> - 7.61.0-1
 - Update to 7.61.0
 - Fix IDN support and debug symbols, enable SSPI support, ship user binary
