@@ -6,7 +6,6 @@ Release:        2%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
-Group:          Development/Libraries
 URL:            https://curl.haxx.se/
 Source0:        https://curl.haxx.se/download/curl-%{version}.tar.xz
 
