@@ -2,7 +2,7 @@
 
 Name:           mingw-curl
 Version:        7.65.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
@@ -178,6 +178,9 @@ rm -rf $RPM_BUILD_ROOT%{mingw64_datadir}/aclocal
 
 
 %changelog
+* Tue Oct 08 2019 Sandro Mani <manisandro@gmail.com> - 7.65.3-2
+- Rebuild (Changes/Mingw32GccDwarf2)
+
 * Tue Aug 13 2019 Fabiano Fidêncio <fidencio@redhat.com> - 7.65.3-1
 - Update the sources accordingly to its native counter part, rhb#z1740787
 
