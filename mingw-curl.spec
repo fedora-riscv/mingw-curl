@@ -2,7 +2,7 @@
 
 Name:           mingw-curl
 Version:        7.65.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
@@ -178,6 +178,9 @@ rm -rf $RPM_BUILD_ROOT%{mingw64_datadir}/aclocal
 
 
 %changelog
+* Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 7.65.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
 * Tue Oct 08 2019 Sandro Mani <manisandro@gmail.com> - 7.65.3-2
 - Rebuild (Changes/Mingw32GccDwarf2)
 
