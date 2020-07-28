@@ -2,7 +2,7 @@
 
 Name:           mingw-curl
 Version:        7.71.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
@@ -178,6 +178,9 @@ rm -rf $RPM_BUILD_ROOT%{mingw64_datadir}/aclocal
 
 
 %changelog
+* Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 7.71.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
 * Fri Jul 24 2020 Michael Cronenworth <mike@cchtml.com> - 7.71.1-1
 - Update to 7.71.1, which fixes the following vulnerabilities
   CVE-2020-8169 - curl: Partial password leak over DNS on HTTP redirect
