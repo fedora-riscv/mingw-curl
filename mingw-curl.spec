@@ -2,7 +2,7 @@
 
 Name:           mingw-curl
 Version:        7.71.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
@@ -11,6 +11,8 @@ Source0:        https://curl.haxx.se/download/curl-%{version}.tar.xz
 
 # prevent configure script from discarding -g in CFLAGS (#496778)
 Patch0:         0102-curl-7.36.0-debug.patch
+# Backport fix for NTLM proxy regression
+Patch1:         3532262edd13e191862b55dec546a732f7d79144.patch
 
 BuildArch:      noarch
 
@@ -178,6 +180,9 @@ rm -rf $RPM_BUILD_ROOT%{mingw64_datadir}/aclocal
 
 
 %changelog
+* Mon Sep 21 2020 Sandro Mani <manisandro@gmail.com> - 7.71.1-3
+- Backport fix for NTLM proxy regression
+
 * Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 7.71.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 
