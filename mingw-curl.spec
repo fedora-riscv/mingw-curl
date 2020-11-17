@@ -1,8 +1,8 @@
-%?mingw_package_header
+%{?mingw_package_header}
 
 Name:           mingw-curl
-Version:        7.71.1
-Release:        3%{?dist}
+Version:        7.73.0
+Release:        1%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
@@ -11,8 +11,6 @@ Source0:        https://curl.haxx.se/download/curl-%{version}.tar.xz
 
 # prevent configure script from discarding -g in CFLAGS (#496778)
 Patch0:         0102-curl-7.36.0-debug.patch
-# Backport fix for NTLM proxy regression
-Patch1:         3532262edd13e191862b55dec546a732f7d79144.patch
 
 BuildArch:      noarch
 
@@ -93,12 +91,11 @@ Requires:       mingw64-curl = %{version}-%{release}
 Static version of the MinGW Windows Curl library.
 
 
-%?mingw_debug_package
+%{?mingw_debug_package}
 
 
 %prep
-%setup -q -n curl-%{version}
-%patch0 -p1
+%autosetup -p1 -n curl-%{version}
 
 
 %build
@@ -180,6 +177,9 @@ rm -rf $RPM_BUILD_ROOT%{mingw64_datadir}/aclocal
 
 
 %changelog
+* Tue Nov 17 2020 Sandro Mani <manisandro@gmail.com> - 7.73.0-1
+- Update to 7.73.0
+
 * Mon Sep 21 2020 Sandro Mani <manisandro@gmail.com> - 7.71.1-3
 - Backport fix for NTLM proxy regression
 
