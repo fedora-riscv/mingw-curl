@@ -2,7 +2,7 @@
 
 Name:           mingw-curl
 Version:        7.71.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
@@ -99,6 +99,7 @@ Static version of the MinGW Windows Curl library.
 %prep
 %setup -q -n curl-%{version}
 %patch0 -p1
+%patch1 -p1
 
 
 %build
@@ -180,6 +181,9 @@ rm -rf $RPM_BUILD_ROOT%{mingw64_datadir}/aclocal
 
 
 %changelog
+* Tue Nov 17 2020 Sandro Mani <manisandro@gmail.com> - 7.71.1-4
+- Actually apply NTLM proxy regression fix
+
 * Mon Sep 21 2020 Sandro Mani <manisandro@gmail.com> - 7.71.1-3
 - Backport fix for NTLM proxy regression
 
