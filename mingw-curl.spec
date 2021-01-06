@@ -14,6 +14,7 @@ Patch0:         0102-curl-7.36.0-debug.patch
 
 BuildArch:      noarch
 
+BuildRequires: make
 BuildRequires:  mingw32-filesystem >= 95
 BuildRequires:  mingw32-gcc
 BuildRequires:  mingw32-binutils
