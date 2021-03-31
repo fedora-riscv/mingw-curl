@@ -1,7 +1,7 @@
-diff -rupN --no-dereference curl-7.75.0/configure curl-7.75.0-new/configure
---- curl-7.75.0/configure	2021-02-02 09:26:33.000000000 +0100
-+++ curl-7.75.0-new/configure	2021-02-04 18:04:29.163935507 +0100
-@@ -16361,18 +16361,11 @@ $as_echo "yes" >&6; }
+diff -rupN --no-dereference curl-7.76.0/configure curl-7.76.0-new/configure
+--- curl-7.76.0/configure	2021-03-30 14:39:20.000000000 +0200
++++ curl-7.76.0-new/configure	2021-03-31 20:46:59.850019548 +0200
+@@ -16373,18 +16373,11 @@ $as_echo "yes" >&6; }
      gccvhi=`echo $gccver | cut -d . -f1`
      gccvlo=`echo $gccver | cut -d . -f2`
      compiler_num=`(expr $gccvhi "*" 100 + $gccvlo) 2>/dev/null`
@@ -23,9 +23,9 @@ diff -rupN --no-dereference curl-7.75.0/configure curl-7.75.0-new/configure
      flags_opt_off="-O0"
  
      OLDCPPFLAGS=$CPPFLAGS
-diff -rupN --no-dereference curl-7.75.0/m4/curl-compilers.m4 curl-7.75.0-new/m4/curl-compilers.m4
---- curl-7.75.0/m4/curl-compilers.m4	2021-02-01 08:16:42.000000000 +0100
-+++ curl-7.75.0-new/m4/curl-compilers.m4	2021-02-04 18:04:29.164935455 +0100
+diff -rupN --no-dereference curl-7.76.0/m4/curl-compilers.m4 curl-7.76.0-new/m4/curl-compilers.m4
+--- curl-7.76.0/m4/curl-compilers.m4	2021-02-04 23:33:54.000000000 +0100
++++ curl-7.76.0-new/m4/curl-compilers.m4	2021-03-31 20:46:59.850019548 +0200
 @@ -175,18 +175,11 @@ AC_DEFUN([CURL_CHECK_COMPILER_GNU_C], [
      gccvhi=`echo $gccver | cut -d . -f1`
      gccvlo=`echo $gccver | cut -d . -f2`
