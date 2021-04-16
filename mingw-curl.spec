@@ -130,7 +130,7 @@ MINGW_BUILDDIR_SUFFIX=_shared %mingw_make_build
 
 %install
 MINGW_BUILDDIR_SUFFIX=_static %mingw_make DESTDIR=%{buildroot}/static install
-MINGW_BUILDDIR_SUFFIX=_shared %mingw_make_instal
+MINGW_BUILDDIR_SUFFIX=_shared %mingw_make_install
 
 # The static library from the static build is the only one of interest to us
 mv %{buildroot}/static%{mingw32_libdir}/libcurl.a %{buildroot}%{mingw32_libdir}/libcurl.a
