@@ -1,7 +1,7 @@
 %{?mingw_package_header}
 
 Name:           mingw-curl
-Version:        7.76.0
+Version:        7.76.1
 Release:        1%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
@@ -124,35 +124,35 @@ MINGW_BUILDDIR_SUFFIX=_shared %mingw_configure --disable-static --enable-shared
 #  --with-gssapi=%{mingw32_prefix}/kerberos --with-libidn
 #  --enable-ldaps --disable-static --with-libssh2
 
-MINGW_BUILDDIR_SUFFIX=_static %mingw_make %{?_smp_mflags}
-MINGW_BUILDDIR_SUFFIX=_shared %mingw_make %{?_smp_mflags}
+MINGW_BUILDDIR_SUFFIX=_static %mingw_make_build
+MINGW_BUILDDIR_SUFFIX=_shared %mingw_make_build
 
 
 %install
-MINGW_BUILDDIR_SUFFIX=_static %mingw_make DESTDIR=$RPM_BUILD_ROOT/static install
-MINGW_BUILDDIR_SUFFIX=_shared %mingw_make DESTDIR=$RPM_BUILD_ROOT install
+MINGW_BUILDDIR_SUFFIX=_static %mingw_make DESTDIR=%{buildroot}/static install
+MINGW_BUILDDIR_SUFFIX=_shared %mingw_make_instal
 
 # The static library from the static build is the only one of interest to us
-mv $RPM_BUILD_ROOT/static%{mingw32_libdir}/libcurl.a $RPM_BUILD_ROOT%{mingw32_libdir}/libcurl.a
-mv $RPM_BUILD_ROOT/static%{mingw64_libdir}/libcurl.a $RPM_BUILD_ROOT%{mingw64_libdir}/libcurl.a
-rm -rf $RPM_BUILD_ROOT/static
+mv %{buildroot}/static%{mingw32_libdir}/libcurl.a %{buildroot}%{mingw32_libdir}/libcurl.a
+mv %{buildroot}/static%{mingw64_libdir}/libcurl.a %{buildroot}%{mingw64_libdir}/libcurl.a
+rm -rf %{buildroot}/static
 
 # Remove .la files
-find $RPM_BUILD_ROOT -name "*.la" -delete
+find %{buildroot} -name "*.la" -delete
 
 # Remove the man pages which duplicate documentation in the
 # native Fedora package.
-rm -r $RPM_BUILD_ROOT%{mingw32_mandir}/man{1,3}
-rm -r $RPM_BUILD_ROOT%{mingw64_mandir}/man{1,3}
+rm -r %{buildroot}%{mingw32_mandir}/man{1,3}
+rm -r %{buildroot}%{mingw64_mandir}/man{1,3}
 
 # Remove redundant autoconf files
-rm -rf $RPM_BUILD_ROOT%{mingw32_datadir}/aclocal
-rm -rf $RPM_BUILD_ROOT%{mingw64_datadir}/aclocal
+rm -rf %{buildroot}%{mingw32_datadir}/aclocal
+rm -rf %{buildroot}%{mingw64_datadir}/aclocal
 
 
 # Win32
 %files -n mingw32-curl
-%doc COPYING
+%license COPYING
 %{mingw32_bindir}/curl.exe
 %{mingw32_bindir}/curl-config
 %{mingw32_bindir}/libcurl-4.dll
@@ -165,7 +165,7 @@ rm -rf $RPM_BUILD_ROOT%{mingw64_datadir}/aclocal
 
 # Win64
 %files -n mingw64-curl
-%doc COPYING
+%license COPYING
 %{mingw64_bindir}/curl.exe
 %{mingw64_bindir}/curl-config
 %{mingw64_bindir}/libcurl-4.dll
@@ -178,6 +178,9 @@ rm -rf $RPM_BUILD_ROOT%{mingw64_datadir}/aclocal
 
 
 %changelog
+* Fri Apr 16 2021 Sandro Mani <manisandro@gmail.com> - 7.76.1-1
+- Update to 7.76.1
+
 * Wed Mar 31 2021 Sandro Mani <manisandro@gmail.com> - 7.76.0-1
 - Update to 7.76.0
 
