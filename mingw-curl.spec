@@ -1,16 +1,13 @@
 %{?mingw_package_header}
 
 Name:           mingw-curl
-Version:        7.77.0
+Version:        7.78.0
 Release:        1%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
 URL:            https://curl.haxx.se/
 Source0:        https://curl.haxx.se/download/curl-%{version}.tar.xz
-
-# prevent configure script from discarding -g in CFLAGS (#496778)
-Patch0:         0102-curl-7.36.0-debug.patch
 
 BuildArch:      noarch
 
@@ -178,6 +175,9 @@ rm -rf %{buildroot}%{mingw64_datadir}/aclocal
 
 
 %changelog
+* Wed Jul 21 2021 Sandro Mani <manisandro@gmail.com> - 7.78.0-1
+- Update to 7.78.0
+
 * Wed May 26 2021 Sandro Mani <manisandro@gmail.com> - 7.77.0-1
 - Update to 7.77.0
 
