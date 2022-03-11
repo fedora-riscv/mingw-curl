@@ -2,7 +2,7 @@
 
 Name:           mingw-curl
 Version:        7.82.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
@@ -129,6 +129,9 @@ MINGW_BUILDDIR_SUFFIX=_shared %mingw_make_build
 MINGW_BUILDDIR_SUFFIX=_static %mingw_make DESTDIR=%{buildroot}/static install
 MINGW_BUILDDIR_SUFFIX=_shared %mingw_make_install
 
+# The curl-config script is hard coded to the build type. Keep a static copy.
+mv %{buildroot}/static%{mingw32_bindir}/curl-config %{buildroot}%{mingw32_bindir}/curl-config-static
+mv %{buildroot}/static%{mingw64_bindir}/curl-config %{buildroot}%{mingw64_bindir}/curl-config-static
 # The static library from the static build is the only one of interest to us
 mv %{buildroot}/static%{mingw32_libdir}/libcurl.a %{buildroot}%{mingw32_libdir}/libcurl.a
 mv %{buildroot}/static%{mingw64_libdir}/libcurl.a %{buildroot}%{mingw64_libdir}/libcurl.a
@@ -158,6 +161,7 @@ rm -rf %{buildroot}%{mingw64_datadir}/aclocal
 %{mingw32_includedir}/curl/
 
 %files -n mingw32-curl-static
+%{mingw32_bindir}/curl-config-static
 %{mingw32_libdir}/libcurl.a
 
 # Win64
@@ -171,10 +175,14 @@ rm -rf %{buildroot}%{mingw64_datadir}/aclocal
 %{mingw64_includedir}/curl/
 
 %files -n mingw64-curl-static
+%{mingw64_bindir}/curl-config-static
 %{mingw64_libdir}/libcurl.a
 
 
 %changelog
+* Fri Mar 11 2022 Michael Cronenworth <mike@cchtml.com> - 7.82.0-2
+- Keep a separate static curl-config (RHBZ#1946299)
+
 * Sat Mar 05 2022 Sandro Mani <manisandro@gmail.com> - 7.82.0-1
 - Update to 7.82.0
 
