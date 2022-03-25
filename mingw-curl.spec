@@ -2,7 +2,7 @@
 
 Name:           mingw-curl
 Version:        7.82.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        MinGW Windows port of curl and libcurl
 
 License:        MIT
@@ -180,6 +180,9 @@ rm -rf %{buildroot}%{mingw64_datadir}/aclocal
 
 
 %changelog
+* Fri Mar 25 2022 Sandro Mani <manisandro@gmail.com> - 7.82.0-3
+- Rebuild with mingw-gcc-12
+
 * Fri Mar 11 2022 Michael Cronenworth <mike@cchtml.com> - 7.82.0-2
 - Keep a separate static curl-config (RHBZ#1946299)
 
